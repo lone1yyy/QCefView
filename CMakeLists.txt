@@ -2,7 +2,7 @@
 # The main config file for QCefView
 # NOTE:
 #   Usually there is no need to change this file.
-#   Change the config.local instead.
+#   Change the config.cmake instead.
 #
 cmake_minimum_required(VERSION 3.4.1)
 project(QCefView)
