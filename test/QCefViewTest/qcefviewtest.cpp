@@ -27,7 +27,11 @@ QCefViewTest::QCefViewTest(QWidget* parent)
   centralWidget()->setLayout(layout);
 }
 
-QCefViewTest::~QCefViewTest() {}
+QCefViewTest::~QCefViewTest() 
+{
+	if (cefview)	delete cefview;
+	cefview = nullptr;
+}
 
 void
 QCefViewTest::onBtnChangeColorClicked()

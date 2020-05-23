@@ -10,6 +10,7 @@
 #include <include/cef_browser.h>
 #include <include/cef_frame.h>
 #include <include/cef_sandbox_win.h>
+#include <include/cef_parser.h>
 #pragma endregion cef_headers
 
 #include <QCefProtocol.h>
@@ -78,11 +79,13 @@ public:
   void navigateToString(const QString& content, const QString& url)
   {
     if (pQCefViewHandler_) {
-      CefString strContent;
-      strContent.FromString(content.toStdString());
-      CefString strUrl;
-      strUrl.FromString(url.toStdString());
-      pQCefViewHandler_->GetBrowser()->GetMainFrame()->LoadString(strContent, strUrl);
+	  auto GetDataURI = [](const std::string& data, const std::string& mime_type)
+	  {
+		  return "data:" + mime_type + ";base64," +
+			  CefURIEncode(CefBase64Encode(data.data(), data.size()), false)
+			  .ToString();
+	  };
+	  pQCefViewHandler_->GetBrowser()->GetMainFrame()->LoadURL(GetDataURI(content.toStdString(), "text/html"));
     }
   }
 

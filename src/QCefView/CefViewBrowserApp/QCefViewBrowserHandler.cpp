@@ -5,6 +5,7 @@
 
 #pragma region cef_headers
 #include <include/cef_app.h>
+#include <include/cef_parser.h>
 #include <include/wrapper/cef_closure_task.h>
 #include <include/wrapper/cef_helpers.h>
 #pragma endregion cef_headers
@@ -341,7 +342,15 @@ QCefViewBrowserHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                       .arg(msg)
                       .arg(errorCode);
 
-  frame->LoadString(content.toStdString(), failedUrl);
+	
+  auto GetDataURI = [](const std::string& data, const std::string& mime_type)
+  {
+	  return "data:" + mime_type + ";base64," +
+		  CefURIEncode(CefBase64Encode(data.data(), data.size()), false)
+		  .ToString();
+  };
+	
+  frame->LoadURL(GetDataURI(content.toStdString(), "text/html"));
   if (pQCefWindow_)
     pQCefWindow_->loadError(errorCode, msg, url);
 }
